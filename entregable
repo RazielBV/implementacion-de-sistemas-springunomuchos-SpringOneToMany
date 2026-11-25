@@ -1,0 +1,14 @@
+1. ¿En qué tabla queda la llave foránea y qué propiedad de Java la controla?
+La llave foránea queda en la tabla de muchos (comentarios, por ejemplo como producto_id) y la controla la propiedad producto de la clase Comment (@ManyToOne), mientras que Product.comentarios usa mappedBy = "producto" como lado inverso.
+
+2. ¿Cuál es la diferencia entre List y Set?
+List conserva el orden y permite elementos duplicados, mientras que Set no garantiza orden y evita duplicados según equals y hashCode.
+
+3. ¿Por qué los identificadores son String y qué tipo de valor guardan?
+Porque ambos modelos usan @GeneratedValue(strategy = GenerationType.UUID), que genera identificadores únicos universales (UUID) en formato cadena de texto (String).
+
+4. ¿Qué ocurre al eliminar un producto con comentarios asociados? ¿Qué cambia si se quita CascadeType.ALL?
+Con CascadeType.ALL en Product.comentarios, al eliminar un Product por JPA se propaga la operación a sus Comment asociados. Si se quita CascadeType.ALL, JPA deja de propagar esa operación desde Product hacia Comment (y borrar un producto con comentarios puede fallar por restricción de llave foránea si existen comentarios ligados).
+
+5. ¿Qué diferencia práctica hay entre los FetchType usados en Product y Comment?
+Product.comentarios usa FetchType.EAGER (carga los comentarios al consultar el producto), mientras que Comment.producto usa FetchType.LAZY (posterga la carga del producto hasta acceder a la relación, algo clave cuando spring.jpa.open-in-view=false).
